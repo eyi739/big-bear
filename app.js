@@ -22,8 +22,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.get('/products', async(req, res) => {
     const products = await Product.find({});
-    console.log(products);
-    res.send('ALL PRODUCTS WILL BE HERE');
+    res.render ('products/index', { products });
 })
 
 app.get('/', (req, res) => {
