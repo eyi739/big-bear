@@ -20,13 +20,21 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
+
+app.get('/', (req, res) => {
+    res.render('home');
+})
+
 app.get('/products', async(req, res) => {
     const products = await Product.find({});
     res.render ('products/index', { products });
 })
 
-app.get('/', (req, res) => {
-    res.render('home');
+app.get('/products/:id', async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    console.log(product);
+    res.send('details page!');
 })
 
 app.get('/makeproduct', async (req, res) => {
