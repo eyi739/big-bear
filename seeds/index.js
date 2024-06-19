@@ -17,4 +17,6 @@ const seedDB = async () => {
     await p.save();
 }
 
-seedDB();
+seedDB().then(() => {
+    mongoose.connection.close()
+})
