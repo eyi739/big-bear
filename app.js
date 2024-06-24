@@ -28,6 +28,14 @@ app.use(methodOverride('_method'));
 
 const categories = ['fruit', 'vegetable',  'dairy'];
 
+const verifyPassword = (req, res, next) => {
+    const { password } = req.query;
+    if(password === 'chickennugget') {
+        next();
+    }
+    res.send('SORRY YOU NEED A PASSWORD');
+}
+
 app.get('/', (req, res) => {
     res.render('home');
 })
@@ -83,6 +91,10 @@ app.delete('/products/:id', async(req, res) => {
     const { id } = req.params;
     const deletedProduct = await Product.findByIdAndDelete(id);
     res.redirect('/products');
+})
+
+app.get('/secret', verifyPassword, (req, res) => {
+    res.send('MY SECRET IS: Sometimes I like apples')
 })
 
 app.listen(3000, () => {
