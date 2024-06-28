@@ -6,6 +6,7 @@ const ProductSchema = new Schema ({
         type: String,
         required: true
     },
+    image: String,
     price: {
         type: Number,
         required: true,
@@ -15,7 +16,8 @@ const ProductSchema = new Schema ({
         type: String,
         lowercase: true,
         enum: ['fruit', 'vegetable', 'dairy']
-    }
+    },
+    description: String,
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
