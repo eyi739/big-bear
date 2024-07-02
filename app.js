@@ -59,9 +59,9 @@ app.get('/products/new', (req, res) => {
 })
 
 app.post('/products', async(req, res) => {
-    const newProduct = new Product(req.body)
-    await newProduct.save();
-  res.redirect(`/products/${newProduct._id}`);
+    const product = new Product(req.body.product)
+    await product.save();
+  res.redirect(`/products/${product._id}`);
 })
 
 app.get('/products/:id', async (req, res) => {
@@ -78,7 +78,7 @@ app.get('/products/:id/edit', async(req, res) => {
 
 app.put('/products/:id', async(req, res) => {
     const { id } = req.params;
-    const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+    const product = await Product.findByIdAndUpdate(id, ...req.body.product, { runValidators: true, new: true });
     res.redirect(`/products/${product._id}`)
 })
 

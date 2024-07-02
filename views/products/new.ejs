@@ -1,16 +1,59 @@
 <% layout('./layouts/boilerplate') %>
-    <h1>Add a Product</h1>
-<form action="/products" method="POST">
-    <label for="name">Product Name</label>
-    <input type="text" name="name" id="name" placeholder="product name">
-    <label for="price">Price (Unit)</label>
-    <input type="text" name="price" id="price" placeholder="price">
-    <label for="category">Select Category</label>
-    <select name="category" id="category">
-        <% for(let category of categories){ %>
-            <option value="<%= category %>"><%= category %></option>
-        <% } %>
+<!-- <div class="row">
+    <h1 class="text-center">New Product</h1>
+    <div class="col-6 offset-3">
+        <form action="/products" method="POST">
+            <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="product[name]">
+            </div>
+            <div>
+                <label for="category">Category</label>
+                <input type="text" id="category" name="product[name]">
+            </div>
+            <button class="btn btn-success">Add Product</button>
+        </form>
+    </div>
+</div> -->
 
-    </select>
-    <button>Submit</button>
-</form>
+
+
+
+
+
+<div class="row">
+    <h1 class="text-center">New Product</h1>
+    <div class="col-6 offset-3">
+        <form action="/products" method="POST">
+            <div class="mb-3">
+                <label class="form-label" for="name">Name</label>
+                <input class="form-control" type="text" id="name" name="product[name]">
+            </div>
+            <div  class="mb-3">
+                <label class="form-label" for="category">Category</label>
+                <input class="form-control" type="text" id="category" name="product[category]">
+            </div>
+          
+            <div  class="mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="product[image]">
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Product Price</label>
+             <div class="input-group">
+                <span class="input-group-text" id="price-label">$</span>
+                <input type="text" class="form-control" name="product[price]"  id="price" aria-describedby="price-label" aria-label="price" placeholder="0.00">
+              </div>
+            </div>              
+
+            <div  class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="product[description]"></textarea>
+            </div>
+           <button class="btn btn-success">Submit</button>
+        </form>
+
+        <a href="/products">All Products</a>
+    </div>
+</div>
