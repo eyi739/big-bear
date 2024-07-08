@@ -7,8 +7,13 @@
         <li>Price: $<%= product.price %> </li>
         <li>Category: <a href="/products?category=<%= product.category %>"><%= product.category %> </a></li>
     </ul>
-    <a href="/products">Show All Products</a>
-    <a href="/products/<%= product._id%>/edit">Edit Product</a>
+    <p>
+        <a href="/products/<%= product._id%>/edit">Edit Product</a>
+    </p>
+    <footer>
+        <a href="/products">Show All Products</a>
+    </footer>
+
     <form action="/products/<%= product._id%>?_method=DELETE" method="POST">
         <button>Delete</button>
     </form>

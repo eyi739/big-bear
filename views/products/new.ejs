@@ -31,7 +31,14 @@
             </div>
             <div  class="mb-3">
                 <label class="form-label" for="category">Category</label>
-                <input class="form-control" type="text" id="category" name="product[category]">
+                <!-- <input class="form-control" type="text" id="category" name="product[category]"> -->
+                 <select name="category" id="category">
+                    <option value="fruit">fruit</option>
+                    <option value="vegetable">vegetable</option>
+                    <option value="dairy">dairy</option>
+                    <option value="meat">meat</option>
+                    <option value="poultry">poultry</option>
+                 </select>
             </div>
           
             <div  class="mb-3">
@@ -53,7 +60,9 @@
             </div>
            <button class="btn btn-success">Submit</button>
         </form>
-
-        <a href="/products">All Products</a>
+        <footer>  
+            <a href="/products">All Products</a>
+        </footer>
+      
     </div>
 </div>

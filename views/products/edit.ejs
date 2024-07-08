@@ -9,12 +9,19 @@
                 <input class="form-control" type="text" id="name" name="product[name]"
                 value="<%= product.name %>">
             </div>
+
             <div  class="mb-3">
                 <label class="form-label" for="category">Category</label>
-                <input class="form-control" type="text" id="category" name="product[category]" 
-                value="<%= product.category %>">
+                <!-- <input class="form-control" type="text" id="category" name="product[category]"> -->
+                 <select name="product[category]" id="category">
+                    <option value="fruit" <%= product.category === 'fruit' ? 'selected':""%>>fruit</option>
+                    <option value="vegetable" <%= product.category === 'vegetable' ? 'selected':""%>>vegetable</option>
+                    <option value="dairy" <%= product.category === 'dairy' ? 'selected':""%>>dairy</option>
+                    <option value="meat" <%= product.category === 'meat' ? 'selected':""%>>meat</option>
+                    <option value="poultry" <%= product.category === 'poultry' ? 'selected':""%>>poultry</option>
+                 </select>
             </div>
-          
+
             <div  class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
                 <input class="form-control" type="text" id="image" name="product[image]" 
@@ -37,6 +44,9 @@
             </div>
            <button class="btn btn-info">Update Campground</button>
         </form>
-        <a href="/products/<%= product._id%> ">Back to Products</a>
+        <footer>
+            <a href="/products/<%= product._id%> ">Back to Products</a>
+        </footer>
+       
     </div>
 </div>
