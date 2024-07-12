@@ -58,10 +58,14 @@ app.get('/products/new', (req, res) => {
     res.render('products/new', {categories});
 })
 
-app.post('/products', async(req, res) => {
+app.post('/products', async(req, res, next) => {
+    try {
     const product = new Product(req.body.product)
     await product.save();
-  res.redirect(`/products/${product._id}`);
+    res.redirect(`/products/${product._id}`);
+    } catch(e) {
+        next(e);
+    }
 })
 
 app.get('/products/:id', async (req, res) => {
@@ -96,6 +100,10 @@ app.delete('/products/:id', async(req, res) => {
 
 app.get('/secret', verifyPassword, (req, res) => {
     res.send('MY SECRET IS: Sometimes I like apples')
+})
+
+app.use((err, req, res, next) => {
+    res.send('OH BOYYYY, SOMETHING WENT WRONG!');
 })
 
 app.listen(3000, () => {

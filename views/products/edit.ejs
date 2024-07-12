@@ -3,11 +3,14 @@
 <div class="row">
     <h1 class="text-center">Edit Product</h1>
     <div class="col-6 offset-3">
-        <form action="/products"  method="POST">
+        <form action="/products"  method="POST" novalidate class="validated-form">
             <div class="mb-3">
                 <label class="form-label" for="name">Name</label>
-                <input class="form-control" type="text" id="name" name="product[name]"
+                <input class="form-control" type="text" id="name" name="product[name]" required
                 value="<%= product.name %>">
+                <div class="valid-feedback">
+                    Looks Great!
+                </div>
             </div>
 
             <div  class="mb-3">
@@ -20,12 +23,18 @@
                     <option value="meat" <%= product.category === 'meat' ? 'selected':""%>>meat</option>
                     <option value="poultry" <%= product.category === 'poultry' ? 'selected':""%>>poultry</option>
                  </select>
+                 <div class="valid-feedback">
+                    Looks Great!
+                </div>
             </div>
 
             <div  class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
-                <input class="form-control" type="text" id="image" name="product[image]" 
+                <input class="form-control" type="text" id="image" name="product[image]" required
                     value="<%= product.image %>">
+                <div class="valid-feedback">
+                        Looks Great!
+                </div>
             </div>
 
             <div class="mb-3">
@@ -33,19 +42,25 @@
              <div class="input-group">
                 <span class="input-group-text" id="price-label">$</span>
                 <input type="text" class="form-control" name="product[price]"  id="price" aria-describedby="price-label" aria-label="price" placeholder="0.00"
-                    value="<%= product.price %>">
-              </div>
+                    value="<%= product.price %>" required>
+                <div class="valid-feedback">
+                        Looks Great!
+                </div>
+            </div>
             </div>              
 
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" type="text" id="description" name="product[description]" >
+                <textarea class="form-control" type="text" id="description" name="product[description]" required >
                     <%= product.description %>"</textarea>
+                <div class="valid-feedback">
+                        Looks Great!
+                </div>
             </div>
-           <button class="btn btn-info">Update Campground</button>
+           <button class="btn btn-info">Update Product</button>
         </form>
         <footer>
-            <a href="/products/<%= product._id%> ">Back to Products</a>
+            <a href="/products/<%= product._id%> ">Back to Product</a>
         </footer>
        
     </div>
