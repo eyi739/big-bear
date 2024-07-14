@@ -3,7 +3,7 @@ const path = require('path');
 const ejsMate = require('ejs-mate');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-
+const catchAsync = require('./utils/catchAsync'); 
 
 const Product = require('./models/product');
 
@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
     res.render('home');
 })
 
-app.get('/products', async(req, res) => {
+app.get('/products', catchAsync(async(req, res) => {
     const { category } = req.query;
     if(category) {
         const products = await Product.find({category})
@@ -50,35 +50,30 @@ app.get('/products', async(req, res) => {
         const products = await Product.find({})
         res.render ('products/index', { products, category: 'All' })
     }
-    const products = await Product.find({});
-    
-})
+    const products = await Product.find({}); 
+}))
 
 app.get('/products/new', (req, res) => {
     res.render('products/new', {categories});
 })
 
-app.post('/products', async(req, res, next) => {
-    try {
+app.post('/products', catchAsync(async(req, res, next) => {
     const product = new Product(req.body.product)
     await product.save();
-    res.redirect(`/products/${product._id}`);
-    } catch(e) {
-        next(e);
-    }
-})
+    res.redirect(`/products/${product._id}`); 
+}))
 
-app.get('/products/:id', async (req, res) => {
+app.get('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
     res.render('products/show', { product });
-})
+}))
 
-app.get('/products/:id/edit', async(req, res) => {
+app.get('/products/:id/edit', catchAsync(async(req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id);
     res.render ('products/edit', { product, categories });
-})
+}))
 
 app.put('/products/:id', async(req, res) => {
     const { id } = req.params;
