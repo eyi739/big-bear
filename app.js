@@ -4,6 +4,7 @@ const ejsMate = require('ejs-mate');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const catchAsync = require('./utils/catchAsync'); 
+const ExpressError = require('./utils/expressError');
 
 const Product = require('./models/product');
 
@@ -58,6 +59,7 @@ app.get('/products/new', (req, res) => {
 })
 
 app.post('/products', catchAsync(async(req, res, next) => {
+    if(!req.body.product) throw new ExpressError('Invalid Product Data', 400 );
     const product = new Product(req.body.product)
     await product.save();
     res.redirect(`/products/${product._id}`); 
@@ -97,9 +99,16 @@ app.get('/secret', verifyPassword, (req, res) => {
     res.send('MY SECRET IS: Sometimes I like apples')
 })
 
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404));
+})
+
 app.use((err, req, res, next) => {
+    const {statusCode = 500, message = 'Something Went Wrong'} = err;
+    res.status(statusCode).send(message);
     res.send('OH BOYYYY, SOMETHING WENT WRONG!');
 })
+
 
 app.listen(3000, () => {
     console.log('Serving on port 3000')
