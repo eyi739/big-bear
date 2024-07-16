@@ -104,9 +104,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    const {statusCode = 500, message = 'Something Went Wrong'} = err;
-    res.status(statusCode).send(message);
-    res.send('OH BOYYYY, SOMETHING WENT WRONG!');
+    const {statusCode = 500 } = err;
+    if(!err.message) err.message = 'Oh no something went wrong'
+    res.status(statusCode).render('error', { err });
 })
 
 
