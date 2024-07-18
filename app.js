@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const Joi = require('joi');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const catchAsync = require('./utils/catchAsync'); 
@@ -59,8 +60,24 @@ app.get('/products/new', (req, res) => {
 })
 
 app.post('/products', catchAsync(async(req, res, next) => {
-    if(!req.body.product) throw new ExpressError('Invalid Product Data', 400 );
-    const product = new Product(req.body.product)
+    // if(!req.body.product) throw new ExpressError('Invalid Product Data', 400 );
+    const productSchema = Joi.object({
+        product: Joi.object({
+            product: Joi.object({
+                name: Joi.string().required(),
+                category: Joi.string().required(),
+                price: Joi.number().min(0),
+                description: Joi.string().required()
+            })
+        }).required()
+    })
+    const { error } = productSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(error.details, 400);
+    }
+    console.log(result);
+    const product = new Product(req.body.product);
     await product.save();
     res.redirect(`/products/${product._id}`); 
 }))
