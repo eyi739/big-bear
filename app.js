@@ -96,7 +96,7 @@ app.delete('/products/:id', async(req, res) => {
 })
 
 app.get('/secret', verifyPassword, (req, res) => {
-    res.send('MY SECRET IS: Sometimes I like apples')
+    res.send('MY SECRET IS: Sometimes I like apples.')
 })
 
 app.all('*', (req, res, next) => {
