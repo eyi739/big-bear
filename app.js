@@ -67,7 +67,8 @@ app.post('/products', catchAsync(async(req, res, next) => {
                 name: Joi.string().required(),
                 category: Joi.string().required(),
                 price: Joi.number().min(0),
-                description: Joi.string().required()
+                description: Joi.string().required(),
+                image: Joi.string()
             })
         }).required()
     })
