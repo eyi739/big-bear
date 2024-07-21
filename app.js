@@ -1,9 +1,11 @@
 const express = require("express");
 const path = require('path');
-const ejsMate = require('ejs-mate');
-const Joi = require('joi');
 const mongoose = require('mongoose');
+
+const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
+
+const { productSchema } = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync'); 
 const ExpressError = require('./utils/expressError');
 
@@ -39,6 +41,16 @@ const verifyPassword = (req, res, next) => {
     res.send('SORRY YOU NEED A PASSWORD');
 }
 
+const validateProduct = (req, res, next) => {
+    const { error } = productSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+
 app.get('/', (req, res) => {
     res.render('home');
 })
@@ -59,25 +71,8 @@ app.get('/products/new', (req, res) => {
     res.render('products/new', {categories});
 })
 
-app.post('/products', catchAsync(async(req, res, next) => {
+app.post('/products', validateProduct, catchAsync(async(req, res, next) => {
     // if(!req.body.product) throw new ExpressError('Invalid Product Data', 400 );
-    const productSchema = Joi.object({
-        product: Joi.object({
-            product: Joi.object({
-                name: Joi.string().required(),
-                category: Joi.string().required(),
-                price: Joi.number().min(0),
-                description: Joi.string().required(),
-                image: Joi.string()
-            })
-        }).required()
-    })
-    const { error } = productSchema.validate(req.body);
-    if(error){
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(error.details, 400);
-    }
-    console.log(result);
     const product = new Product(req.body.product);
     await product.save();
     res.redirect(`/products/${product._id}`); 
@@ -95,7 +90,7 @@ app.get('/products/:id/edit', catchAsync(async(req, res) => {
     res.render ('products/edit', { product, categories });
 }))
 
-app.put('/products/:id', async(req, res) => {
+app.put('/products/:id', validateProduct, async(req, res) => {
     const { id } = req.params;
     const product = await Product.findByIdAndUpdate(id, ...req.body.product, { runValidators: true, new: true });
     res.redirect(`/products/${product._id}`)
