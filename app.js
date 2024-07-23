@@ -10,6 +10,7 @@ const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/expressError');
 
 const Product = require('./models/product');
+const Review = require ('./models/review');
 
 mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://127.0.0.1:27017/bigBear');
@@ -107,6 +108,16 @@ app.delete('/products/:id', async(req, res) => {
     const deletedProduct = await Product.findByIdAndDelete(id);
     res.redirect('/products');
 })
+
+app.post('/products/:id/reviews', catchAsync(async(req, res) => {
+    const product = await Product.findById(req.params.id);
+    const review = new Review(req.body.review);
+    product.reviews.push(review);
+    await review.save();
+    await product.save();
+    res.redirect(`/products/${product._id}`)
+    res.send('YOU MADE IT');
+}))
 
 app.get('/secret', verifyPassword, (req, res) => {
     res.send('MY SECRET IS: Sometimes I like apples.')
