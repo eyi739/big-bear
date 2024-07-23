@@ -18,6 +18,12 @@ const ProductSchema = new Schema ({
         enum: ['fruit', 'vegetable', 'dairy', 'meat', 'poultry']
     },
     description: String,
+    reviews: [
+        {   
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
 
 module.exports = mongoose.model('Product', ProductSchema);
