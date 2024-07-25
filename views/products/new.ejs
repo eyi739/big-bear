@@ -24,12 +24,12 @@
                 <label class="form-label" for="name">Name</label>
                 <input class="form-control" type="text" id="name" name="product[name]" required>
                 <div class="valid-feedback">
-                    Great!
+                Great!
                 </div>
             </div>
           
             <div  class="mb-3">
-                <label class="form-label" for="category">Category</label>
+                <label class="form-label" for="category">Category: </label>
                 <!-- <input class="form-control" type="text" id="category" name="product[category]"> -->
                  <select required name="product[category]" id="category">
                     <option value="fruit">fruit</option>
@@ -38,11 +38,15 @@
                     <option value="meat">meat</option>
                     <option value="poultry">poultry</option>
                  </select>
+                 
             </div>
           
             <div  class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
                 <input class="form-control" type="text" id="image" name="product[image]" required>
+                <div class="valid-feedback">
+                    Looks Great!
+                </div>
             </div>
 
             <div class="mb-3">
