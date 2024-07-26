@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
 
-const { productSchema } = require('./schemas.js');
+const { productSchema, reviewSchema  } = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync'); 
 const ExpressError = require('./utils/expressError');
 
@@ -44,6 +44,16 @@ const verifyPassword = (req, res, next) => {
 
 const validateProduct = (req, res, next) => {
     const { error } = productSchema.validate(req.body);
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if(error){
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
@@ -109,7 +119,7 @@ app.delete('/products/:id', async(req, res) => {
     res.redirect('/products');
 })
 
-app.post('/products/:id/reviews', catchAsync(async(req, res) => {
+app.post('/products/:id/reviews', validateReview, catchAsync(async(req, res) => {
     const product = await Product.findById(req.params.id);
     const review = new Review(req.body.review);
     product.reviews.push(review);
