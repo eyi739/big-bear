@@ -1,8 +1,9 @@
 <% layout('./layouts/boilerplate') %>
+
 <div class="row">
     <div class="row col-6 offset-3">
-      <div class="card mb-3">
-        <img src="<%= product.image %>" class="card-img- img-fluid" alt="...">
+      <div class="mb-3">
+        <img src="<%= product.image %>" class="card-img-top img-fluid" style="width: 45rem;" alt="...">
       <div class="card-body">
           <h5 class="card-title"><%= product.name %></h5>
           <p class="card-text"><%=  product.description %> </p>
@@ -23,7 +24,9 @@
           <div class="card-footer text-muted ">
             2 days ago
         </div>
+
         <h2>Leave A Review OR ELSE</h2>
+        
         <form action="/products/<%= product._id%>/reviews" method="POST" novalidate class="mb-3 validated-form">
           <div class="mb-3">
             <label class="form-label" for="rating">Rating</label>
@@ -37,10 +40,15 @@
               Looks Really Good!
             </div>
           </div>
-
           <button class="btn btn-success">Submit</button>
         </form>
-
+        <% for (let review of product.reviews ) { %>
+          <div class="mb-3">
+            <p>Rating: <%= review.rating %></p>
+            <p>Review: <%= review.body %> </p>
+          </div>
+        <% } %> 
+      
       </div>
   
       </div>
