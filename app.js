@@ -129,6 +129,13 @@ app.post('/products/:id/reviews', validateReview, catchAsync(async(req, res) => 
     res.send('YOU MADE IT');
 }))
 
+app.delete('/products/:id/reviews/:reviewId', catchAsync(async(req,res) => {
+    const { id, reviewId } = req.params;
+    Product.findByIdAndUpdate(id, {$pull:{reviews: reviewId} })
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/products/${id}`)
+}))
+
 app.get('/secret', verifyPassword, (req, res) => {
     res.send('MY SECRET IS: Sometimes I like apples.')
 })
