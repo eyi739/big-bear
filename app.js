@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require('path');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
@@ -24,6 +25,7 @@ db.once("open", () => {
 });
 
 const app = express();
+app.use(cookieParser());
 
 app.engine('ejs', ejsMate );
 app.set('view engine', 'ejs');
@@ -31,6 +33,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
+
+
+
 
 const categories = ['fruit', 'vegetable',  'dairy'];
 
@@ -61,6 +66,23 @@ const validateReview = (req, res, next) => {
         next();
     }
 }
+
+app.get('/setname', (req, res) => {
+    res.cookie('name', 'Davie Jones');
+    res.cookie('animal', 'Blue-ring Octopus')
+    res.send('OK YOU SENT A COOKIE')
+})
+
+app.get('/getsignedcookie', (req , res) => {
+    res.cookie('fruit', 'grape', {signed: true});
+    res.send('you signed your first cookie !!!');
+})
+
+app.get('/verifyfruit', (req, res) => {
+    console.log(req.cookies)
+    console.log(req.signedCookies)
+    res.send(req.signedCookies)
+})
 
 app.get('/', (req, res) => {
     res.render('home');
