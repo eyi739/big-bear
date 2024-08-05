@@ -1,7 +1,8 @@
-const express = require("express");
+const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const session = require('express-session')
 
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
@@ -25,17 +26,18 @@ db.once("open", () => {
 });
 
 const app = express();
-app.use(cookieParser());
-
 app.engine('ejs', ejsMate );
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
-
-
-
+app.use(cookieParser());
+app.use(session({
+    secret: 'thisisnotagoodsecret',
+    resave: false,
+    saveUninitialized: true
+}));
 
 const categories = ['fruit', 'vegetable',  'dairy'];
 
@@ -67,21 +69,43 @@ const validateReview = (req, res, next) => {
     }
 }
 
-app.get('/setname', (req, res) => {
-    res.cookie('name', 'Davie Jones');
-    res.cookie('animal', 'Blue-ring Octopus')
-    res.send('OK YOU SENT A COOKIE')
-})
 
-app.get('/getsignedcookie', (req , res) => {
-    res.cookie('fruit', 'grape', {signed: true});
-    res.send('you signed your first cookie !!!');
-})
+
+// app.get('/setname', (req, res) => {
+//     res.cookie('name', 'Davie Jones');
+//     res.cookie('animal', 'Blue-ring Octopus')
+//     res.send('OK YOU SENT A COOKIE')
+// })
+
+// app.get('/getsignedcookie', (req , res) => {
+//     res.cookie('fruit', 'grape', {signed: true});
+//     res.send('you signed your first cookie !!!');
+// })
 
 app.get('/verifyfruit', (req, res) => {
     console.log(req.cookies)
     console.log(req.signedCookies)
     res.send(req.signedCookies)
+})
+
+app.get('/viewcount', (req, res) => {
+    if(req.session.count){
+        req.session.count +=1
+    } else {
+        req.session.count = 1;
+    }
+    res.send(`You have viewed this page ${req.session.count} times`);
+})
+
+app.get('/register', (req, res) => {
+    const { username = 'Anonymous' } = req.query;
+    req.session.username = username;
+    res.redirect('/greet');
+})
+
+app.get('/greet' , (req, res) => {
+    const { username } = req.session;
+    res.send(`Welcome Back, ${username}`);
 })
 
 app.get('/', (req, res) => {
@@ -164,6 +188,7 @@ app.get('/secret', verifyPassword, (req, res) => {
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
+    
 })
 
 app.use((err, req, res, next) => {
@@ -171,6 +196,7 @@ app.use((err, req, res, next) => {
     if(!err.message) err.message = 'Oh no something went wrong'
     res.status(statusCode).render('error', { err });
 })
+
 
 
 app.listen(3000, () => {
