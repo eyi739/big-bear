@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
+const flash = require('connect-flash');
 
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override');
@@ -38,6 +39,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+app.use(flash());
 
 const categories = ['fruit', 'vegetable',  'dairy'];
 
@@ -132,13 +134,14 @@ app.post('/products', validateProduct, catchAsync(async(req, res, next) => {
     // if(!req.body.product) throw new ExpressError('Invalid Product Data', 400 );
     const product = new Product(req.body.product);
     await product.save();
+    req.flash('success', 'You have successfully created a new product!');
     res.redirect(`/products/${product._id}`); 
 }))
 
 app.get('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id).populate('reviews');
-    res.render('products/show', { product });
+    res.render('products/show', { product, messages: req.flash('success') });
 }))
 
 app.get('/products/:id/edit', catchAsync(async(req, res) => {
