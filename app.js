@@ -84,30 +84,36 @@ const validateReview = (req, res, next) => {
 //     res.send('you signed your first cookie !!!');
 // })
 
-app.get('/verifyfruit', (req, res) => {
-    console.log(req.cookies)
-    console.log(req.signedCookies)
-    res.send(req.signedCookies)
-})
+// app.get('/verifyfruit', (req, res) => {
+//     console.log(req.cookies)
+//     console.log(req.signedCookies)
+//     res.send(req.signedCookies)
+// })
 
-app.get('/viewcount', (req, res) => {
-    if(req.session.count){
-        req.session.count +=1
-    } else {
-        req.session.count = 1;
-    }
-    res.send(`You have viewed this page ${req.session.count} times`);
-})
+// app.get('/viewcount', (req, res) => {
+//     if(req.session.count){
+//         req.session.count +=1
+//     } else {
+//         req.session.count = 1;
+//     }
+//     res.send(`You have viewed this page ${req.session.count} times`);
+// })
 
-app.get('/register', (req, res) => {
-    const { username = 'Anonymous' } = req.query;
-    req.session.username = username;
-    res.redirect('/greet');
-})
+// app.get('/register', (req, res) => {
+//     const { username = 'Anonymous' } = req.query;
+//     req.session.username = username;
+//     res.redirect('/greet');
+// })
 
-app.get('/greet' , (req, res) => {
-    const { username } = req.session;
-    res.send(`Welcome Back, ${username}`);
+// app.get('/greet' , (req, res) => {
+//     const { username } = req.session;
+//     res.send(`Welcome Back, ${username}`);
+// })
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next();
 })
 
 app.get('/', (req, res) => {
@@ -141,7 +147,7 @@ app.post('/products', validateProduct, catchAsync(async(req, res, next) => {
 app.get('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id).populate('reviews');
-    res.render('products/show', { product, messages: req.flash('success') });
+    res.render('products/show', { product });
 }))
 
 app.get('/products/:id/edit', catchAsync(async(req, res) => {
