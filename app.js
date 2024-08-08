@@ -147,6 +147,10 @@ app.post('/products', validateProduct, catchAsync(async(req, res, next) => {
 app.get('/products/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const product = await Product.findById(id).populate('reviews');
+    if(!product){
+        req.flash('error', 'Cannot Find that Product!')
+        return res.redirect('/products')
+    } 
     res.render('products/show', { product });
 }))
 
@@ -180,8 +184,8 @@ app.post('/products/:id/reviews', validateReview, catchAsync(async(req, res) => 
     product.reviews.push(review);
     await review.save();
     await product.save();
-    res.redirect(`/products/${product._id}`)
-    res.send('YOU MADE IT');
+    req.flash('success', 'You have successfully created a new review!');
+    res.redirect(`/products/${product._id}`);
 }))
 
 app.delete('/products/:id/reviews/:reviewId', catchAsync(async(req,res) => {
